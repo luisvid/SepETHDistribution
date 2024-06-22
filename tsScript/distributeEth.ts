@@ -48,8 +48,8 @@ const rpcUrls: Record<NetworkName, string> = {
 
 // Define the addresses of the deployed contract on different networks
 const addresses: Record<NetworkName, string> = {
-  anvil: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-  sepolia: "0xYourSepoliaContractAddress",
+  anvil: "YOUR_CONTRACT_ADDRESS_HERE",
+  sepolia: "YOUR_CONTRACT_ADDRESS_HERE",
 };
 
 const provider = new ethers.JsonRpcProvider(rpcUrls[network]);
@@ -61,8 +61,8 @@ const ethDistribuitor = new ethers.Contract(ethDistribuitorAddress, abi_Distribu
 
 // Function to read addresses from a file
 async function readAddressesFromFile(filePath: string): Promise<string[]> {
-  const fileContent = await fs.readFile(filePath, 'utf8');
-  return fileContent.split(',').map(address => address.trim());
+  const fileContent = await fs.readFile(filePath, "utf8");
+  return fileContent.split(",").map((address) => address.trim());
 }
 
 // Function to set the distribution amount
@@ -130,13 +130,13 @@ async function main() {
     // Read addresses from the specified file
     const addresses = await readAddressesFromFile(argv.addressFile);
 
-    // Set distribution amount to 10 ETH
-    await setDistributionAmount(100); // Example: 0.01 ETH per address
+    // Set distribution amount to 0.05 ETH per address
+    await setDistributionAmount(0.5);
 
     await submitAddresses(addresses);
 
     // Fund the contract with sufficient ETH
-    await fundContract(1000); // Example: 1 ETH
+    await fundContract(1); // Example: 1 ETH
 
     // Distribute SepoliaETH
     await distributeBatch();
@@ -147,13 +147,8 @@ async function main() {
     // withdraw the contract balance back to the owner
     console.log("Withdrawing the contract balance back to the owner");
     const tx = await ethDistribuitor.withdraw();
-    await tx.wait()
-    console.log("Contract balance withdrawn back to the owner")
-
-
-    // Check the contract balance
-    await checkContractBalance();
-
+    await tx.wait();
+    console.log("Contract balance withdrawn back to the owner");
   } catch (error) {
     console.error("Error in main execution:", error);
   }
