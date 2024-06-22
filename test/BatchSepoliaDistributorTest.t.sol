@@ -1,17 +1,15 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+pragma solidity 0.8.25;
 
 import { Test } from "forge-std/src/Test.sol";
-import { console2 } from "forge-std/src/console2.sol";
-
 import { BatchSepoliaDistributor } from "../src/BatchSepoliaDistributor.sol";
 
 contract BatchSepoliaDistributorTest is Test {
     // Vm public constant vm = Vm(HEVM_ADDRESS);s
 
-    BatchSepoliaDistributor distributor;
-    address owner;
-    address[] recipients;
+    BatchSepoliaDistributor public distributor;
+    address public owner;
+    address[] public recipients;
 
     function setUp() public {
         owner = address(this);
@@ -128,5 +126,4 @@ contract BatchSepoliaDistributorTest is Test {
 
     // fallback function to receive Ether
     receive() external payable { }
-    
 }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.25;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import { Ownable } from "@openzeppelin/contracts/access/Ownable.sol";
 import { console2 } from "forge-std/src/console2.sol";
 
 /**
@@ -23,6 +23,8 @@ contract BatchSepoliaDistributor is Ownable {
     error AddressAlreadySubmitted(address addr);
     error InsufficientContractBalance(uint256 required, uint256 available);
     error NoRecipients();
+    error ContractBalanceZero();
+    error WithdrawalFailed();
 
     /**
      * @dev Initializes the contract with an initial distribution amount.
@@ -111,15 +113,15 @@ contract BatchSepoliaDistributor is Ownable {
     function withdraw() public onlyOwner {
         uint256 balance = address(this).balance;
         if (balance == 0) {
-            revert("Contract balance is zero");
+            revert ContractBalanceZero();
         }
 
         // Attempt to transfer the contract balance to the owner using call
-        (bool sent, ) = msg.sender.call{value: balance}("");
+        (bool sent,) = msg.sender.call{ value: balance }("");
         console2.log("Withdrawal status: %s", sent ? "Success" : "Failed");
 
         if (!sent) {
-            revert("Failed to withdraw contract balance");
+            revert WithdrawalFailed();
         }
 
         emit Withdrawal(owner(), balance);
